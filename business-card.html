@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- 页面基础编码与视口设置 -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>个人名片</title>
+  <!-- 引入外部样式表，实现 HTML 结构与 CSS 样式分离 -->
+  <link rel="stylesheet" href="business-card.css" />
+</head>
+<body>
+
+  <!-- 名片主容器：居中卡片式布局，圆角 + 阴影 + 悬停上浮动画均在 CSS 中实现 -->
+  <main class="card">
+
+    <!-- 圆形头像：使用 CSS 绘制的色块头像 + 姓名首字母，无需依赖外部图片资源 -->
+    <div class="avatar" aria-label="头像">张</div>
+
+    <!-- 姓名 -->
+    <h1 class="name">张三</h1>
+
+    <!-- 职位 -->
+    <p class="title">前端开发工程师</p>
+
+    <!-- 分隔线，区分基本信息与联系方式 -->
+    <hr class="divider" />
+
+    <!-- 联系方式列表 -->
+    <ul class="contact-list">
+      <li class="contact-item">
+        <span class="icon" aria-hidden="true">📞</span>
+        <span>138-0000-0000</span>
+      </li>
+      <li class="contact-item">
+        <span class="icon" aria-hidden="true">✉️</span>
+        <span>zhangsan@example.com</span>
+      </li>
+      <li class="contact-item">
+        <span class="icon" aria-hidden="true">📍</span>
+        <span>中国 · 上海</span>
+      </li>
+    </ul>
+
+  </main>
+
+</body>
+</html>

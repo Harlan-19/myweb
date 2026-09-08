@@ -1,0 +1,118 @@
+/* ============================================
+   个人名片页面样式
+   风格定位：简约、留白充足、低饱和度配色
+   ============================================ */
+
+/* 全局盒模型重置，避免 padding/border 影响宽高计算 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 页面整体布局：利用 flex 实现卡片在视口中的水平垂直居中 */
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+  background: #f4f6f9; /* 简约浅灰背景，衬托卡片 */
+  color: #2c2f36;
+}
+
+/* ============================================
+   名片卡片主体
+   ============================================ */
+.card {
+  width: 320px;
+  padding: 36px 28px;
+  text-align: center;
+  background: #ffffff;
+
+  /* 12px 圆角 */
+  border-radius: 12px;
+
+  /* 柔和阴影，营造轻微悬浮质感 */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  /* 过渡动画：作用于位移和阴影，保证悬停时效果顺滑 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 鼠标悬停时：卡片轻微上浮 + 阴影加深，增强层次感 */
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* ============================================
+   圆形头像
+   ============================================ */
+.avatar {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 20px;
+  border-radius: 50%; /* 圆形头像 */
+
+  /* 简约渐变色块作为头像背景 */
+  background: linear-gradient(135deg, #6c8ef5, #8f7bf0);
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 600;
+
+  /* 居中显示姓名首字母 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 4px 10px rgba(108, 142, 245, 0.35);
+}
+
+/* ============================================
+   姓名与职位文字
+   ============================================ */
+.name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1f2329;
+  margin-bottom: 6px;
+}
+
+.title {
+  font-size: 0.95rem;
+  color: #8a8f98; /* 弱化职位文字颜色，突出姓名 */
+  margin-bottom: 20px;
+}
+
+/* 分隔线：淡色细线，划分基本信息与联系方式 */
+.divider {
+  border: none;
+  border-top: 1px solid #eceef2;
+  margin: 0 0 20px;
+}
+
+/* ============================================
+   联系方式列表
+   ============================================ */
+.contact-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #4a4f57;
+}
+
+.icon {
+  font-size: 1rem;
+  width: 20px;
+  text-align: center;
+}

@@ -1,0 +1,563 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>动漫资源直连页</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --panel: rgba(9, 20, 38, 0.94);
+      --text: #f7f9ff;
+      --muted: #9eb0cc;
+      --accent: #ff5fa2;
+      --accent-2: #5ad1ff;
+      --border: rgba(255,255,255,0.12);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      background: linear-gradient(135deg, #07111f, #12253f 55%, #0d1b2a);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 0 18px; }
+
+    header {
+      padding: 28px 0 18px;
+      background: radial-gradient(circle at top left, rgba(90,209,255,0.2), transparent 28%),
+                  radial-gradient(circle at top right, rgba(255,95,162,0.2), transparent 34%);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .brand { font-size: 1.2rem; font-weight: 800; letter-spacing: 0.04em; }
+    .brand span { color: var(--accent-2); }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      margin-left: 12px;
+      font-size: 0.95rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-top: 8px;
+    }
+
+    .hero-card, .featured-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.22);
+    }
+
+    .hero-card h1 { margin: 0 0 8px; font-size: 2rem; }
+    .lead { color: var(--muted); max-width: 760px; margin: 0 0 12px; }
+    .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .hero-tags .tag { margin: 0; }
+
+    .featured-card { display: flex; flex-direction: column; justify-content: space-between; }
+    .featured-card h3 { margin: 0 0 8px; }
+    .featured-card p { color: var(--muted); margin: 0 0 10px; }
+    .featured-meta { color: var(--accent-2); font-size: 0.95rem; font-weight: 700; }
+
+    .search-shell {
+      margin-top: 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .search-box { display: flex; gap: 10px; flex-wrap: wrap; }
+    .search-box input {
+      flex: 1;
+      min-width: 240px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      outline: none;
+    }
+
+    .search-box button, .chip, .site-btn {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .chip { padding: 8px 12px; font-size: 0.9rem; opacity: 0.95; }
+
+    .site-switch { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    .site-btn { padding: 8px 12px; background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: var(--text); }
+    .site-btn.active { background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: white; }
+
+    main { padding: 18px 0 28px; }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin: 16px 0 10px;
+      flex-wrap: wrap;
+    }
+
+    .cards-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .mini-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      color: var(--text);
+    }
+    .mini-card h4 { margin: 0 0 6px; }
+    .mini-card p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 16px 35px rgba(0,0,0,0.18);
+    }
+
+    .panel h2, .panel h3 { margin: 0 0 8px; }
+    .result-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+    .result-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .result-card:hover { transform: translateY(-1px); border-color: var(--accent-2); }
+    .result-card.active { border-color: var(--accent-2); box-shadow: inset 0 0 0 1px var(--accent-2); }
+    .result-card .meta { color: var(--muted); font-size: 0.92rem; margin: 4px 0 0; }
+    .tag { display: inline-block; padding: 3px 8px; margin-top: 8px; margin-right: 6px; border-radius: 999px; background: rgba(255,255,255,0.08); color: var(--accent-2); font-size: 0.78rem; }
+
+    .preview-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .preview-box {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: white;
+      min-height: 640px;
+      position: relative;
+    }
+    iframe {
+      width: 100%;
+      height: 640px;
+      border: none;
+      background: white;
+    }
+    .preview-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.92);
+      color: #224063;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      pointer-events: none;
+    }
+
+    .hint { color: var(--muted); font-size: 0.92rem; margin-top: 8px; }
+
+    .empty {
+      padding: 16px;
+      text-align: center;
+      color: var(--muted);
+      background: rgba(255,255,255,0.04);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 0 18px 24px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .preview-box, iframe { min-height: 480px; height: 480px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">动漫<span>库</span></div>
+        <div class="nav-links">
+          <a href="#">首页</a>
+          <a href="#">热播</a>
+          <a href="#">新番</a>
+          <a href="#">国漫</a>
+        </div>
+      </div>
+
+      <div class="hero">
+        <div class="hero-card">
+          <h1>我的动漫资源库</h1>
+          <p class="lead">基于樱花动漫与 AGE动漫整理出的番剧资源入口，支持搜索、筛选和站内预览，让你拥有更像正式动漫网站的浏览体验。</p>
+          <div class="hero-tags">
+            <span class="tag">热播推荐</span>
+            <span class="tag">新番更新</span>
+            <span class="tag">国漫日漫</span>
+            <span class="tag">站内直看</span>
+          </div>
+          <div class="search-shell">
+            <div class="search-box">
+              <input id="searchInput" type="text" placeholder="输入动漫名，例如：海贼王、鬼灭之刃、凡人修仙传" />
+              <button id="searchBtn">搜索</button>
+            </div>
+            <div class="chips">
+              <button class="chip" data-key="海贼王">海贼王</button>
+              <button class="chip" data-key="鬼灭之刃">鬼灭之刃</button>
+              <button class="chip" data-key="凡人修仙传">凡人修仙传</button>
+              <button class="chip" data-key="间谍家家酒">间谍家家酒</button>
+            </div>
+            <div class="site-switch">
+              <button class="site-btn active" data-site="all">全部</button>
+              <button class="site-btn" data-site="yh">樱花动漫</button>
+              <button class="site-btn" data-site="age">AGE动漫</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="featured-card">
+          <div>
+            <div class="featured-meta">今日推荐</div>
+            <h3>海贼王 · 经典冒险</h3>
+            <p>从两个资源站中提炼出的经典番剧入口，适合快速进入观看与资源预览。</p>
+          </div>
+          <div>
+            <div class="featured-meta">最新标签</div>
+            <div class="hero-tags">
+              <span class="tag">冒险</span>
+              <span class="tag">热血</span>
+              <span class="tag">经典</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="section-title">
+        <h2>热门分类</h2>
+        <span>根据资源库内容推荐</span>
+      </div>
+      <div class="cards-row">
+        <div class="mini-card"><h4>热播</h4><p>海贼王、鬼灭之刃、咒术回战</p></div>
+        <div class="mini-card"><h4>新番</h4><p>间谍家家酒、蓝色监狱第二季</p></div>
+        <div class="mini-card"><h4>国漫</h4><p>凡人修仙传、雾山五行</p></div>
+        <div class="mini-card"><h4>日漫</h4><p>一拳超人、葬送的芙莉莲</p></div>
+      </div>
+    </div>
+
+    <div class="wrap layout">
+      <section class="panel">
+        <h2>我的资源库</h2>
+        <div id="resultList" class="result-list"></div>
+      </section>
+
+      <section class="panel">
+        <div class="preview-head">
+          <h3 id="previewTitle">当前预览</h3>
+          <span id="previewSite">正在加载...</span>
+        </div>
+        <div class="preview-box">
+          <div id="previewLoading" class="preview-loading">正在加载同步预览...</div>
+          <iframe id="previewFrame" src="preview-bridge.html?q=动漫&site=当前预览&mode=同源预览" title="动漫资源预览"></iframe>
+        </div>
+        <p class="hint">点击左侧结果后，内容会直接在当前页面中展示；如站点限制嵌入，则页面会显示站点首页内容。</p>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 动漫资源直连页 · 当前页面内展示目标站点内容</p>
+  </footer>
+
+  <script>
+    const resources = [
+      {
+        title: '海贼王',
+        site: 'AGE动漫',
+        siteKey: 'age',
+        desc: 'AGE动漫首页中常见的经典动漫资源条目，已纳入我们的资源库。',
+        tags: ['热血', '冒险', '经典'],
+        url: 'https://www.age-dm.com.cn/zh_cn'
+      },
+      {
+        title: '鬼灭之刃',
+        site: 'AGE动漫',
+        siteKey: 'age',
+        desc: 'AGE动漫首页推荐的热门番剧，已整理为站内资源卡片。',
+        tags: ['战斗', '热血', '新番'],
+        url: 'https://www.age-dm.com.cn/zh_cn'
+      },
+      {
+        title: '咒术回战',
+        site: 'AGE动漫',
+        siteKey: 'age',
+        desc: 'AGE动漫中推荐的高人气日漫资源，适合快速检索。',
+        tags: ['战斗', '热血', '热门'],
+        url: 'https://www.age-dm.com.cn/zh_cn'
+      },
+      {
+        title: '我的英雄学院',
+        site: 'AGE动漫',
+        siteKey: 'age',
+        desc: 'AGE动漫首页中常见的校园热血类动漫入口。',
+        tags: ['校园', '热血', '英雄'],
+        url: 'https://www.age-dm.com.cn/zh_cn'
+      },
+      {
+        title: '间谍过家家',
+        site: 'AGE动漫',
+        siteKey: 'age',
+        desc: 'AGE动漫推荐的搞笑与家庭日常类番剧。',
+        tags: ['搞笑', '家庭', '日常'],
+        url: 'https://www.age-dm.com.cn/zh_cn'
+      },
+      {
+        title: '孤独摇滚',
+        site: 'AGE动漫',
+        siteKey: 'age',
+        desc: 'AGE动漫首页展示的青春音乐类新番资源。',
+        tags: ['青春', '音乐', '治愈'],
+        url: 'https://www.age-dm.com.cn/zh_cn'
+      },
+      {
+        title: '凡人修仙传：仙界篇',
+        site: '樱花动漫',
+        siteKey: 'yh',
+        desc: '樱花动漫首页展示的国产动漫内容，已加入自建资源库。',
+        tags: ['国产', '玄幻', '更新中'],
+        url: 'https://web.yh-dm.com.cn/zh-hans'
+      },
+      {
+        title: '雾山五行',
+        site: '樱花动漫',
+        siteKey: 'yh',
+        desc: '樱花动漫中常见的国产动画资源入口。',
+        tags: ['国产', '动画', '热门'],
+        url: 'https://web.yh-dm.com.cn/zh-hans'
+      },
+      {
+        title: '间谍家家酒 第三季',
+        site: '樱花动漫',
+        siteKey: 'yh',
+        desc: '樱花动漫首页推荐的新番内容，已整理为站内资源。',
+        tags: ['新番', '日漫', '搞笑'],
+        url: 'https://web.yh-dm.com.cn/zh-hans'
+      },
+      {
+        title: '蓝色监狱 第二季',
+        site: '樱花动漫',
+        siteKey: 'yh',
+        desc: '樱花动漫首页中的热门竞技类番剧资源。',
+        tags: ['热血', '竞技', '日漫'],
+        url: 'https://web.yh-dm.com.cn/zh-hans'
+      },
+      {
+        title: '一拳超人 第三季',
+        site: '樱花动漫',
+        siteKey: 'yh',
+        desc: '樱花动漫中常见的超人类热血番剧入口。',
+        tags: ['热血', '动作', '日漫'],
+        url: 'https://web.yh-dm.com.cn/zh-hans'
+      },
+      {
+        title: '葬送的芙莉莲 第二季',
+        site: '樱花动漫',
+        siteKey: 'yh',
+        desc: '樱花动漫首页的推荐动画资源，适合整理为站内收藏。',
+        tags: ['治愈', '冒险', '日漫'],
+        url: 'https://web.yh-dm.com.cn/zh-hans'
+      }
+    ];
+
+    const resultList = document.getElementById('resultList');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const previewTitle = document.getElementById('previewTitle');
+    const previewSite = document.getElementById('previewSite');
+    const previewFrame = document.getElementById('previewFrame');
+    const previewLoading = document.getElementById('previewLoading');
+    const siteButtons = document.querySelectorAll('.site-btn');
+    const chipButtons = document.querySelectorAll('.chip');
+
+    let activeSite = 'all';
+
+    function showBridgePreview(keyword) {
+      const safeKeyword = (keyword || '').trim() || '动漫';
+      const siteLabel = activeSite === 'all' ? '全部站点' : (activeSite === 'yh' ? '樱花动漫' : 'AGE动漫');
+      const previewUrl = new URL('preview-bridge.html', window.location.href);
+      previewUrl.searchParams.set('q', safeKeyword);
+      previewUrl.searchParams.set('site', siteLabel);
+      previewUrl.searchParams.set('mode', '同步预览');
+      previewFrame.src = previewUrl.toString();
+      previewLoading.style.display = 'flex';
+    }
+
+    function showSitePreview(siteKey) {
+      const targetUrl = siteKey === 'yh'
+        ? 'https://web.yh-dm.com.cn/zh-hans'
+        : siteKey === 'age'
+          ? 'https://www.age-dm.com.cn/zh_cn'
+          : 'https://web.yh-dm.com.cn/zh-hans';
+      previewFrame.src = targetUrl;
+      previewLoading.style.display = 'flex';
+    }
+
+    function filterResources() {
+      const keyword = searchInput.value.toLowerCase().trim();
+      return resources.filter(item => {
+        const matchesSite = activeSite === 'all' || item.siteKey === activeSite;
+        const haystack = [item.title, item.site, item.desc, item.tags.join(' ')].join(' ').toLowerCase();
+        const matchesKeyword = !keyword || haystack.includes(keyword);
+        return matchesSite && matchesKeyword;
+      });
+    }
+
+    function renderResults() {
+      const filtered = filterResources();
+      if (!filtered.length) {
+        resultList.innerHTML = '<div class="empty">没有找到匹配内容，换个关键词再搜一次。</div>';
+        previewTitle.textContent = '当前预览';
+        previewSite.textContent = '暂无结果';
+        showBridgePreview(searchInput.value);
+        return;
+      }
+
+      resultList.innerHTML = filtered.map(item => `
+        <div class="result-card" data-title="${item.title}" data-site="${item.site}" data-url="${item.url}">
+          <strong>${item.title}</strong>
+          <div class="meta">来源：${item.site}</div>
+          <div class="meta">${item.desc}</div>
+          <div>${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>
+        </div>
+      `).join('');
+
+      loadPreview(filtered[0]);
+    }
+
+    function loadPreview(item) {
+      previewTitle.textContent = item.title;
+      previewSite.textContent = item.site;
+      previewFrame.src = item.url;
+      previewLoading.style.display = 'none';
+      document.querySelectorAll('.result-card').forEach(card => card.classList.remove('active'));
+      const current = Array.from(document.querySelectorAll('.result-card')).find(card => card.dataset.title === item.title && card.dataset.site === item.site);
+      if (current) current.classList.add('active');
+    }
+
+    renderResults();
+
+    function handleSearch() {
+      renderResults();
+      showBridgePreview(searchInput.value);
+    }
+
+    searchBtn.addEventListener('click', handleSearch);
+    searchInput.addEventListener('input', () => {
+      showBridgePreview(searchInput.value);
+    });
+    searchInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        handleSearch();
+      }
+    });
+
+    siteButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        siteButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeSite = btn.dataset.site;
+        renderResults();
+        showSitePreview(btn.dataset.site);
+      });
+    });
+
+    chipButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        searchInput.value = btn.dataset.key;
+        renderResults();
+        showBridgePreview(searchInput.value);
+      });
+    });
+
+    resultList.addEventListener('click', (event) => {
+      const card = event.target.closest('.result-card');
+      if (!card) return;
+      const item = resources.find(entry => entry.title === card.dataset.title && entry.site === card.dataset.site);
+      if (item) loadPreview(item);
+    });
+
+    window.addEventListener('message', (event) => {
+      if (event.data?.type === 'bridge-sync') {
+        searchInput.value = event.data.value;
+        renderResults();
+      }
+    });
+
+    previewFrame.addEventListener('load', () => {
+      previewLoading.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

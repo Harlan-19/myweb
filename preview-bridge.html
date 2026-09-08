@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>搜索同步预览页</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7ff;
+      --panel: #ffffff;
+      --text: #14213d;
+      --muted: #5f6d8b;
+      --accent: #ff5fa2;
+      --accent-2: #5ad1ff;
+      --border: #dfe8ff;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg), #eaf3ff 70%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      width: min(100%, 640px);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 16px 32px rgba(20, 33, 61, 0.12);
+    }
+
+    .title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin: 0 0 10px;
+    }
+
+    .sub {
+      color: var(--muted);
+      margin: 0 0 12px;
+      line-height: 1.6;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .search-box input {
+      flex: 1;
+      min-width: 220px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      outline: none;
+      font-size: 1rem;
+    }
+
+    .search-box button {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 15px;
+      font-weight: 700;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+
+    .meta {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #f7faff;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      margin-top: 8px;
+      border-radius: 999px;
+      background: rgba(90, 209, 255, 0.16);
+      color: #1572a6;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2 class="title" id="previewTitle">搜索同步预览</h2>
+    <p class="sub">主页面输入的内容会实时同步到这里，当前预览页会直接显示你输入的关键词。</p>
+    <div class="search-box">
+      <input id="bridgeSearch" type="text" placeholder="输入内容后会同步到预览页" />
+      <button id="bridgeBtn">立即同步</button>
+    </div>
+    <div class="meta">
+      <div>当前关键词：<strong id="keywordText">动漫</strong></div>
+      <div>目标资源：<strong id="siteText">当前预览</strong></div>
+      <span class="pill" id="modeText">同源预览</span>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const input = document.getElementById('bridgeSearch');
+    const keywordText = document.getElementById('keywordText');
+    const siteText = document.getElementById('siteText');
+    const modeText = document.getElementById('modeText');
+    const title = document.getElementById('previewTitle');
+
+    function syncValue(value) {
+      const nextValue = value || '动漫';
+      input.value = nextValue;
+      keywordText.textContent = nextValue;
+      title.textContent = `搜索同步预览 · ${nextValue}`;
+    }
+
+    const initialKeyword = params.get('q') || '动漫';
+    const initialSite = params.get('site') || '当前预览';
+    const initialMode = params.get('mode') || '同源预览';
+    syncValue(initialKeyword);
+    siteText.textContent = initialSite;
+    modeText.textContent = initialMode;
+
+    function applySearch() {
+      const value = input.value.trim() || '动漫';
+      syncValue(value);
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'bridge-sync', value }, '*');
+      }
+    }
+
+    document.getElementById('bridgeBtn').addEventListener('click', applySearch);
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        applySearch();
+      }
+    });
+  </script>
+</body>
+</html>
